@@ -44,25 +44,21 @@ Users can manually trigger a celebration with `/goalbot goal`, or convert one Re
 
 ## Unraid deployment
 
-The repository includes `Dockerfile`, `docker-compose.yml`, and `.env.unraid.example`. Unraid runs a prebuilt image instead of building from source, so the stack folder `/mnt/user/appdata/haaland-goal-tracker` only needs `docker-compose.yml`, `.env`, `gifs/` and `data/`. Copy `.env.unraid.example` to `.env`, fill in the private credentials, and copy the contents of `gifs/` into the share's `gifs/` folder. In Dockge, add the stack from that folder and choose **Compose Up**. The `unless-stopped` restart policy keeps the bot running across container restarts and Unraid reboots. The `gifs/` and `data/` folders are mounted outside the container so GIFs, Reddit clips, and goal state persist.
+Every push to `main` runs `npm test` and, if it passes, the `Build and publish image` workflow publishes `ghcr.io/matthewcarberry/haaland-goalbot:latest` to GitHub Container Registry. Unraid runs that prebuilt image and only pulls a new one when you ask it to; nothing on the server polls GitHub.
 
-### Automatic updates from GitHub
+The bot runs from the Unraid template in `unraid/haaland-goal-tracker.xml`, so it has Edit and Autostart on the Docker tab. Its appdata folder `/mnt/user/appdata/haaland-goal-tracker` holds `.env`, `gifs/` and `data/`; the template mounts `gifs/` and `data/` and loads `.env` with `--env-file` in Extra Parameters.
 
-Every push to `main` runs `npm test` and, if it passes, the `Build and publish image` workflow pushes `ghcr.io/matthewcarberry/haaland-goalbot:latest` to GitHub Container Registry. The stack's `watchtower` service checks for a new image every 5 minutes, pulls it, and restarts the bot. It only manages containers labelled `com.centurylinklabs.watchtower.enable=true`, so other Unraid containers are left alone.
+First-time setup:
 
-The image is private, so the Unraid box needs a read-only GitHub token:
+1. Copy `.env.unraid.example` to `.env` in the appdata folder, fill in the private credentials, and copy the GIFs into its `gifs/` folder.
+2. The image is private, so create a classic personal access token at <https://github.com/settings/tokens> with only the `read:packages` scope, and run `docker login ghcr.io -u matthewcarberry` in the Unraid terminal with the token as the password.
+3. Copy the XML to `/boot/config/plugins/dockerMan/templates-user/my-haaland-goal-tracker.xml`, then use **Add Container**, pick it under the user templates, and click **Apply**. Turn on **Autostart**.
 
-1. Create a classic personal access token at <https://github.com/settings/tokens> with only the `read:packages` scope.
-2. Set `GHCR_USERNAME` and `GHCR_TOKEN` in the stack's `.env`.
-3. In the Unraid terminal, run `docker login ghcr.io -u matthewcarberry` once and paste the token, so Dockge can do the first pull. Watchtower uses the `.env` values after that.
+To update after a push to `main`: on the Docker tab, click **Check for Updates**. The bot shows **update ready** once the new image is published; click it to pull the image and restart the bot. Unraid keeps `/root` in RAM, so after a reboot run the `docker login` from step 2 again before updating.
 
-The bot container shows `assets/unraid-icon.png` as its icon on the Unraid Docker page through the `net.unraid.docker.icon` label. Unraid downloads the icon itself, so it needs a public URL; while this repository is private, upload the image somewhere public and set `UNRAID_ICON_URL` in `.env`.
+Unraid downloads container icons from a URL, which cannot be a private repository file. To use `assets/unraid-icon.png` without hosting it, copy it to `/var/lib/docker/unraid/images/<container-name>-icon.png`.
 
-### Unraid template
-
-To manage the bot from the Unraid Docker tab (Edit, Autostart, icon), run it from `unraid/haaland-goal-tracker.xml` instead of `docker-compose.yml`. Copy the XML to `/boot/config/plugins/dockerMan/templates-user/my-haaland-goal-tracker.xml`, then use **Add Container** and pick it under the user templates. Secrets still come from `.env` through `--env-file` in Extra Parameters. In that setup, copy `unraid/docker-compose.watchtower.yml` over `docker-compose.yml` in the appdata folder (next to `.env`, which it reads for the GHCR login), so compose runs only Watchtower and never creates a second bot container.
-
-To deploy a change by hand, choose **Update** on the stack in Dockge. To build locally instead, run `docker build -t ghcr.io/matthewcarberry/haaland-goalbot:latest .` from a checkout.
+`docker-compose.yml` still runs the same image without the template. To build locally instead, run `docker build -t ghcr.io/matthewcarberry/haaland-goalbot:latest .` from a checkout.
 
 ## Behavior and tuning
 

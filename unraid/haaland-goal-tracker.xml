@@ -9,15 +9,14 @@
   <Privileged>false</Privileged>
   <Support>https://github.com/matthewcarberry/haaland-goalbot</Support>
   <Project>https://github.com/matthewcarberry/haaland-goalbot</Project>
-  <Overview>Discord bot that posts a random Erling Haaland GIF when he scores. Secrets live in .env in the appdata folder, loaded with --env-file in Extra Parameters. Watchtower updates the image from GitHub.</Overview>
+  <Overview>Discord bot that posts a random Erling Haaland GIF when he scores. Secrets live in .env in the appdata folder, loaded with --env-file in Extra Parameters. Update it from the Docker tab after a new image is published.</Overview>
   <Category>Tools:</Category>
   <WebUI/>
   <TemplateURL/>
   <Icon>https://raw.githubusercontent.com/matthewcarberry/haaland-goalbot/main/assets/unraid-icon.png</Icon>
-  <ExtraParams>--init --env-file=/mnt/user/appdata/haaland-goal-tracker/.env --label=com.centurylinklabs.watchtower.enable=true</ExtraParams>
+  <ExtraParams>--init --env-file=/mnt/user/appdata/haaland-goal-tracker/.env</ExtraParams>
   <PostArgs/>
   <CPUset/>
-  <Requires>Run the watchtower service from docker-compose.yml so new images are pulled automatically.</Requires>
   <Config Name="GIFs" Target="/app/gifs" Default="/mnt/user/appdata/haaland-goal-tracker/gifs" Mode="rw" Description="Folder of Haaland GIFs" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/haaland-goal-tracker/gifs</Config>
   <Config Name="Data" Target="/app/data" Default="/mnt/user/appdata/haaland-goal-tracker/data" Mode="rw" Description="Goal state and Reddit clips" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/haaland-goal-tracker/data</Config>
   <Config Name="TZ" Target="TZ" Default="America/Chicago" Mode="" Description="Time zone" Type="Variable" Display="always" Required="false" Mask="false">America/Chicago</Config>
