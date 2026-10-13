@@ -4,3 +4,5 @@ data/state.json
 data/reddit-state.json
 data/reddit-clips/
 *.log
+gifs/*
+!gifs/.gitkeep
