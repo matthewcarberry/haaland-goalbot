@@ -1,0 +1,18 @@
+services:
+  haaland-goal-tracker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: haaland-goal-tracker
+    restart: unless-stopped
+    init: true
+    env_file:
+      - .env
+    environment:
+      TZ: America/Chicago
+      GIF_DIRECTORY: /app/gifs
+      DATA_DIR: /app/data
+      REDDIT_CLIP_DIRECTORY: /app/data/reddit-clips
+    volumes:
+      - /mnt/user/appdata/haaland-goal-tracker/gifs:/app/gifs
+      - /mnt/user/appdata/haaland-goal-tracker/data:/app/data

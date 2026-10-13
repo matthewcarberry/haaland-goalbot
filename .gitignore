@@ -1,0 +1,6 @@
+node_modules/
+.env
+data/state.json
+data/reddit-state.json
+data/reddit-clips/
+*.log
