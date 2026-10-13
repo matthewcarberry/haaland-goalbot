@@ -60,7 +60,7 @@ The bot container shows `assets/unraid-icon.png` as its icon on the Unraid Docke
 
 ### Unraid template
 
-To manage the bot from the Unraid Docker tab (Edit, Autostart, icon), run it from `unraid/haaland-goal-tracker.xml` instead of `docker-compose.yml`. Copy the XML to `/boot/config/plugins/dockerMan/templates-user/my-haaland-goal-tracker.xml`, then use **Add Container** and pick it under the user templates. Secrets still come from `.env` through `--env-file` in Extra Parameters. In that setup, run only Watchtower from compose with `unraid/docker-compose.watchtower.yml`, so compose never creates a second bot container.
+To manage the bot from the Unraid Docker tab (Edit, Autostart, icon), run it from `unraid/haaland-goal-tracker.xml` instead of `docker-compose.yml`. Copy the XML to `/boot/config/plugins/dockerMan/templates-user/my-haaland-goal-tracker.xml`, then use **Add Container** and pick it under the user templates. Secrets still come from `.env` through `--env-file` in Extra Parameters. In that setup, copy `unraid/docker-compose.watchtower.yml` over `docker-compose.yml` in the appdata folder (next to `.env`, which it reads for the GHCR login), so compose runs only Watchtower and never creates a second bot container.
 
 To deploy a change by hand, choose **Update** on the stack in Dockge. To build locally instead, run `docker build -t ghcr.io/matthewcarberry/haaland-goalbot:latest .` from a checkout.
 
