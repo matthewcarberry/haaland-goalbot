@@ -17,6 +17,8 @@ services:
       - /mnt/user/appdata/haaland-goal-tracker/data:/app/data
     labels:
       com.centurylinklabs.watchtower.enable: "true"
+      # Icon on the Unraid Docker page. Unraid downloads it, so it must be a public URL.
+      net.unraid.docker.icon: ${UNRAID_ICON_URL:-https://raw.githubusercontent.com/matthewcarberry/haaland-goalbot/main/assets/unraid-icon.png}
 
   # Pulls new bot images from GHCR and restarts the bot. Only touches containers with the label above.
   watchtower:

@@ -56,6 +56,8 @@ The image is private, so the Unraid box needs a read-only GitHub token:
 2. Set `GHCR_USERNAME` and `GHCR_TOKEN` in the stack's `.env`.
 3. In the Unraid terminal, run `docker login ghcr.io -u matthewcarberry` once and paste the token, so Dockge can do the first pull. Watchtower uses the `.env` values after that.
 
+The bot container shows `assets/unraid-icon.png` as its icon on the Unraid Docker page through the `net.unraid.docker.icon` label. Unraid downloads the icon itself, so it needs a public URL; while this repository is private, upload the image somewhere public and set `UNRAID_ICON_URL` in `.env`.
+
 To deploy a change by hand, choose **Update** on the stack in Dockge. To build locally instead, run `docker build -t ghcr.io/matthewcarberry/haaland-goalbot:latest .` from a checkout.
 
 ## Behavior and tuning
