@@ -1,8 +1,7 @@
 services:
   haaland-goal-tracker:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # Built and published by .github/workflows/docker-publish.yml on every push to main.
+    image: ghcr.io/matthewcarberry/haaland-goalbot:latest
     container_name: haaland-goal-tracker
     restart: unless-stopped
     init: true
@@ -16,3 +15,20 @@ services:
     volumes:
       - /mnt/user/appdata/haaland-goal-tracker/gifs:/app/gifs
       - /mnt/user/appdata/haaland-goal-tracker/data:/app/data
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+
+  # Pulls new bot images from GHCR and restarts the bot. Only touches containers with the label above.
+  watchtower:
+    image: nickfedor/watchtower:latest
+    container_name: haaland-goal-tracker-watchtower
+    restart: unless-stopped
+    environment:
+      TZ: America/Chicago
+      WATCHTOWER_LABEL_ENABLE: "true"
+      WATCHTOWER_POLL_INTERVAL: "300"
+      WATCHTOWER_CLEANUP: "true"
+      REPO_USER: ${GHCR_USERNAME}
+      REPO_PASS: ${GHCR_TOKEN}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
