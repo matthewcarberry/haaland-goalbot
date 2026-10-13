@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>haaland-goal-tracker</Name>
+  <Repository>ghcr.io/matthewcarberry/haaland-goalbot:latest</Repository>
+  <Registry>https://github.com/matthewcarberry/haaland-goalbot/pkgs/container/haaland-goalbot</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/matthewcarberry/haaland-goalbot</Support>
+  <Project>https://github.com/matthewcarberry/haaland-goalbot</Project>
+  <Overview>Discord bot that posts a random Erling Haaland GIF when he scores. Secrets live in .env in the appdata folder, loaded with --env-file in Extra Parameters. Watchtower updates the image from GitHub.</Overview>
+  <Category>Tools:</Category>
+  <WebUI/>
+  <TemplateURL/>
+  <Icon>https://raw.githubusercontent.com/matthewcarberry/haaland-goalbot/main/assets/unraid-icon.png</Icon>
+  <ExtraParams>--init --env-file=/mnt/user/appdata/haaland-goal-tracker/.env --label=com.centurylinklabs.watchtower.enable=true</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <Requires>Run the watchtower service from docker-compose.yml so new images are pulled automatically.</Requires>
+  <Config Name="GIFs" Target="/app/gifs" Default="/mnt/user/appdata/haaland-goal-tracker/gifs" Mode="rw" Description="Folder of Haaland GIFs" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/haaland-goal-tracker/gifs</Config>
+  <Config Name="Data" Target="/app/data" Default="/mnt/user/appdata/haaland-goal-tracker/data" Mode="rw" Description="Goal state and Reddit clips" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/haaland-goal-tracker/data</Config>
+  <Config Name="TZ" Target="TZ" Default="America/Chicago" Mode="" Description="Time zone" Type="Variable" Display="always" Required="false" Mask="false">America/Chicago</Config>
+  <Config Name="GIF_DIRECTORY" Target="GIF_DIRECTORY" Default="/app/gifs" Mode="" Description="" Type="Variable" Display="advanced" Required="true" Mask="false">/app/gifs</Config>
+  <Config Name="DATA_DIR" Target="DATA_DIR" Default="/app/data" Mode="" Description="" Type="Variable" Display="advanced" Required="true" Mask="false">/app/data</Config>
+  <Config Name="REDDIT_CLIP_DIRECTORY" Target="REDDIT_CLIP_DIRECTORY" Default="/app/data/reddit-clips" Mode="" Description="" Type="Variable" Display="advanced" Required="true" Mask="false">/app/data/reddit-clips</Config>
+</Container>

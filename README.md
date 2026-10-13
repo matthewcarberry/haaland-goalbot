@@ -58,6 +58,10 @@ The image is private, so the Unraid box needs a read-only GitHub token:
 
 The bot container shows `assets/unraid-icon.png` as its icon on the Unraid Docker page through the `net.unraid.docker.icon` label. Unraid downloads the icon itself, so it needs a public URL; while this repository is private, upload the image somewhere public and set `UNRAID_ICON_URL` in `.env`.
 
+### Unraid template
+
+To manage the bot from the Unraid Docker tab (Edit, Autostart, icon), run it from `unraid/haaland-goal-tracker.xml` instead of `docker-compose.yml`. Copy the XML to `/boot/config/plugins/dockerMan/templates-user/my-haaland-goal-tracker.xml`, then use **Add Container** and pick it under the user templates. Secrets still come from `.env` through `--env-file` in Extra Parameters. In that setup, run only Watchtower from compose with `unraid/docker-compose.watchtower.yml`, so compose never creates a second bot container.
+
 To deploy a change by hand, choose **Update** on the stack in Dockge. To build locally instead, run `docker build -t ghcr.io/matthewcarberry/haaland-goalbot:latest .` from a checkout.
 
 ## Behavior and tuning

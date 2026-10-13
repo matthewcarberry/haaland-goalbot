@@ -1,0 +1,16 @@
+# Watchtower only, for when the bot runs from the Unraid template in this folder.
+# Pulls new bot images from GHCR and restarts any container labelled for Watchtower.
+services:
+  watchtower:
+    image: nickfedor/watchtower:latest
+    container_name: haaland-goal-tracker-watchtower
+    restart: unless-stopped
+    environment:
+      TZ: America/Chicago
+      WATCHTOWER_LABEL_ENABLE: "true"
+      WATCHTOWER_POLL_INTERVAL: "300"
+      WATCHTOWER_CLEANUP: "true"
+      REPO_USER: ${GHCR_USERNAME}
+      REPO_PASS: ${GHCR_TOKEN}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
