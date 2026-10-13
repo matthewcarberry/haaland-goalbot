@@ -44,7 +44,19 @@ Users can manually trigger a celebration with `/goalbot goal`, or convert one Re
 
 ## Unraid deployment
 
-The repository includes `Dockerfile`, `docker-compose.yml`, and `.env.unraid.example`. Copy the project to `/mnt/user/appdata/haaland-goal-tracker` on Unraid, copy `.env.unraid.example` to `.env`, fill in the private credentials, and copy the contents of `gifs/` into the share's `gifs/` folder. In Dockge, add the stack from that folder and choose **Compose Up**. The `unless-stopped` restart policy keeps the bot running across container restarts and Unraid reboots. The `gifs/` and `data/` folders are mounted outside the container so GIFs, Reddit clips, and goal state persist.
+The repository includes `Dockerfile`, `docker-compose.yml`, and `.env.unraid.example`. Unraid runs a prebuilt image instead of building from source, so the stack folder `/mnt/user/appdata/haaland-goal-tracker` only needs `docker-compose.yml`, `.env`, `gifs/` and `data/`. Copy `.env.unraid.example` to `.env`, fill in the private credentials, and copy the contents of `gifs/` into the share's `gifs/` folder. In Dockge, add the stack from that folder and choose **Compose Up**. The `unless-stopped` restart policy keeps the bot running across container restarts and Unraid reboots. The `gifs/` and `data/` folders are mounted outside the container so GIFs, Reddit clips, and goal state persist.
+
+### Automatic updates from GitHub
+
+Every push to `main` runs `npm test` and, if it passes, the `Build and publish image` workflow pushes `ghcr.io/matthewcarberry/haaland-goalbot:latest` to GitHub Container Registry. The stack's `watchtower` service checks for a new image every 5 minutes, pulls it, and restarts the bot. It only manages containers labelled `com.centurylinklabs.watchtower.enable=true`, so other Unraid containers are left alone.
+
+The image is private, so the Unraid box needs a read-only GitHub token:
+
+1. Create a classic personal access token at <https://github.com/settings/tokens> with only the `read:packages` scope.
+2. Set `GHCR_USERNAME` and `GHCR_TOKEN` in the stack's `.env`.
+3. In the Unraid terminal, run `docker login ghcr.io -u matthewcarberry` once and paste the token, so Dockge can do the first pull. Watchtower uses the `.env` values after that.
+
+To deploy a change by hand, choose **Update** on the stack in Dockge. To build locally instead, run `docker build -t ghcr.io/matthewcarberry/haaland-goalbot:latest .` from a checkout.
 
 ## Behavior and tuning
 
